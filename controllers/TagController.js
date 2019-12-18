@@ -16,8 +16,8 @@ class TagController {
                         count: tag.Feeds.length
                     });
                 });
-                res.send(tagsData);
-                // res.render('tags/list', {tags});
+                // res.send(tagsData);
+                res.render('tags/list', {tags});
             }).catch((err) => {
                 res.send(err);
             });

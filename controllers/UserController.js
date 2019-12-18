@@ -26,7 +26,7 @@ class UserController {
     }
 
     static loginPage(req, res){
-        res.render('users/login', {})
+        res.render('users/login', res.params)
     }
 
     static login(req, res){
@@ -38,16 +38,20 @@ class UserController {
             }
         })
         .then(user => {
-            let checkPassword = hashingPassword(user['secret'], password)
-            if (user['password'] === checkPassword) {
-                console.log(`${user['first_name']} successed login`);
-                res.redirect(`/user/${user['id']}`)
-            }else{
-                console.log('login failed');
+            if (!user || !user['secret']) {
+                throw 'Wrong Username or Password';
+            } else {
+                let checkPassword = hashingPassword(user['secret'], password);
+                if (user['password'] !== checkPassword) {
+                    throw 'Wrong Username or Password';
+                } else {
+                    console.log(`${user['first_name']} successed login`);
+                    res.redirect(`/user/${user['id']}`)
+                }
             }
         })
         .catch((err) => {
-            console.log(err);
+            res.redirect(`/user?failed=${err}`)
         })
     }
 

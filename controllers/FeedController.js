@@ -23,6 +23,7 @@ class FeedController {
         const tagsAdd = req.body.tagsName.split(',');
         const tagsIdFound = [];
         const arrFeedTags = [];
+        console.log(req.params.id);
         const options = {
             where: {
                 name: tagsAdd
@@ -50,7 +51,7 @@ class FeedController {
                 return Feed.create({
                     title: req.body.title,
                     content: req.body.content,
-                    userId: req.params.id
+                    UserId: req.params.id
                 });
             }).then((addedFeed) => {
                 tagsIdFound.forEach(tagId => {
@@ -62,8 +63,8 @@ class FeedController {
 
                 return FeedTags.bulkCreate(arrFeedTags);
             }).then((addedFeedTags) => {
-                res.send(addedFeedTags);
-                // res.redirect('/feed?success=Feed sucessfully added');
+                // res.send(addedFeedTags);
+                res.redirect(`/user/${req.params.id}`);
             }).catch((err) => {
                 res.send(err);
                 // res.redirect('/feed?err='+err);

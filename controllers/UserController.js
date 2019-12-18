@@ -26,7 +26,9 @@ class UserController {
     }
 
     static loginPage(req, res){
-        res.render('users/login', res.params)
+        const data = req.query
+        ;
+        res.render('users/login', {data});
     }
 
     static login(req, res){

@@ -1,5 +1,6 @@
 const User = require('../models/index').User
 const hashingPassword = require('../helpers/hashingPassord')
+const Tag = require('../models').Tag
 
 class UserController {
     static registerPage(req, res){
@@ -25,7 +26,8 @@ class UserController {
     }
 
     static loginPage(req, res){
-        res.render('users/login', req.params)
+        const data = req.query;
+        res.render('users/login', {data});
     }
 
     static login(req, res){
@@ -99,6 +101,28 @@ class UserController {
         })
         .catch(err => {
             console.log(err);
+        })
+    }
+
+    static userPage(req, res){
+        let userId = req.params.id
+        let user = null
+        User.findOne({
+            where:{
+                id: userId
+            }
+        })
+        .then(userLogin => {
+            // res.render('users/user', {user})
+            user = userLogin
+            return user.getFeeds({include : Tag})
+        })
+        .then(feed => {
+            // res.send(feed[1]['Tags'][0]['name'])
+            res.render('users/user', {feed, user})
+        })
+        .catch(err => {
+            res.send(err)
         })
     }
     

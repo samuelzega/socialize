@@ -1,9 +1,12 @@
-const {Feed, Tag, FeedTags} = require('../models');
+'use strict'
+
+const fs = require('fs');
+const {Feed, Tag, FeedTags, User} = require('../models');
 
 class FeedController {
     static showFeed(req, res) {
         const options = {
-            include: Tag,
+            include: [Tag,User],
             order: [['createdAt','ASC']]
         };
         Feed.findAll(options)
@@ -20,9 +23,15 @@ class FeedController {
     }
 
     static addFeed(req, res) {
+        // const data = {
+        //     file: req.file.filename,
+        //     body: req.body
+        // };
+        // res.send(data);
         const tagsAdd = req.body.tagsName.split(',');
         const tagsIdFound = [];
         const arrFeedTags = [];
+        console.log(req.params.id);
         const options = {
             where: {
                 name: tagsAdd
@@ -50,7 +59,7 @@ class FeedController {
                 return Feed.create({
                     title: req.body.title,
                     content: req.body.content,
-                    userId: req.params.id
+                    UserId: req.params.id
                 });
             }).then((addedFeed) => {
                 tagsIdFound.forEach(tagId => {
@@ -62,8 +71,8 @@ class FeedController {
 
                 return FeedTags.bulkCreate(arrFeedTags);
             }).then((addedFeedTags) => {
-                res.send(addedFeedTags);
-                // res.redirect('/feed?success=Feed sucessfully added');
+                // res.send(addedFeedTags);
+                res.redirect(`/user/${req.params.id}`);
             }).catch((err) => {
                 res.send(err);
                 // res.redirect('/feed?err='+err);
@@ -82,6 +91,31 @@ class FeedController {
             }).catch((err) => {
                 res.send(err);
             });
+    }
+
+    static uploadImage(req, res) {
+        const tempPath = req.file.path;
+        const targetPath = path.join(__dirname, "./uploads/image.png");
+
+        if (path.extname(req.file.originalname).toLowerCase() === ".png") {
+            fs.rename(tempPath, targetPath, err => {
+                if (err) return handleError(err, res);
+
+                res
+                    .status(200)
+                    .contentType("text/plain")
+                    .end("File uploaded!");
+            });
+        } else {
+            fs.unlink(tempPath, err => {
+                if (err) return handleError(err, res);
+
+                res
+                    .status(403)
+                    .contentType("text/plain")
+                    .end("Only .png files are allowed!");
+            });
+        }
     }
 }
 

@@ -6,18 +6,13 @@
     <body>
         <%-include('../partials/navbar')%>
 
-        <form method="post">
+        <form method="post" enctype="multipart/form-data">
             TITLE: <input type="text" name="title" id="title"><br>
             CONTENT: <input type="textara" name="content" id="content"><br>
             TAG: <input type="tag" name="tagsName" id="tagsName"><br>
             <!-- <input type="text" value="Amsterdam,Washington,Sydney,Beijing,Cairo" data-role="tagsinput" /> -->
-            <!-- <input type="file" name="file"> -->
+            <input type="file" name="avatar" />
             <button type="submit">Save</button>
-        </form>
-
-        <form method="post" enctype="multipart/form-data" action="/upload">
-            <input type="file" name="file">
-            <input type="submit" value="Submit">
         </form>
 
         <%-include('../partials/footer')%>

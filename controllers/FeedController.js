@@ -23,6 +23,11 @@ class FeedController {
     }
 
     static addFeed(req, res) {
+        // const data = {
+        //     file: req.file.filename,
+        //     body: req.body
+        // };
+        // res.send(data);
         const tagsAdd = req.body.tagsName.split(',');
         const tagsIdFound = [];
         const arrFeedTags = [];

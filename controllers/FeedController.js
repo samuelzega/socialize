@@ -11,7 +11,6 @@ class FeedController {
         };
         Feed.findAll(options)
             .then((feeds) => {
-                // res.send(feeds);
                 res.render('feeds/list', {feeds});
             }).catch((err) => {
                 res.send(err);

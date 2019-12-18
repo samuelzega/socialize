@@ -17,7 +17,7 @@ class TagController {
                     });
                 });
                 // res.send(tagsData);
-                res.render('tags/list', {tags});
+                res.render('tags/list', {tagsData});
             }).catch((err) => {
                 res.send(err);
             });

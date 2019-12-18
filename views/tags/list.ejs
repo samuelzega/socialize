@@ -7,9 +7,25 @@
         <%-include('../partials/navbar')%>
 
         <div class="container">
-            <%tags.forEach(tag => {%>
-                <%=JSON.stringify(tag)%><br>
-            <%});%>
+            <h1 class="mt-4 mb-4">All Tags</h1>
+            <table class="table table-hover text-center">
+                <thead class="thead-light">
+                    <tr>
+                        <th scope="col">Tag Name</th>
+                        <th scope="col">Total Feeds</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <%tagsData.forEach(tag => {%>
+                        <tr>
+                            <th scope="row">
+                                <a class="btn btn-outline-info btn-sm" href="#"><%=tag.name%></a>
+                            </th>
+                            <td>x<%=tag.count%></td>
+                        </tr>
+                    <%});%>
+                </tbody>
+            </table>
         </div>
 
         <%-include('../partials/footer')%>

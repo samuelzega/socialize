@@ -1,9 +1,9 @@
-const {Feed, Tag, FeedTags} = require('../models');
+const {Feed, Tag, FeedTags, User} = require('../models');
 
 class FeedController {
     static showFeed(req, res) {
         const options = {
-            include: Tag,
+            include: [Tag,User],
             order: [['createdAt','ASC']]
         };
         Feed.findAll(options)

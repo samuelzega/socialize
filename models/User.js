@@ -11,14 +11,15 @@ module.exports = (sequelize, DataTypes) => {
     first_name: DataTypes.STRING,
     last_name: DataTypes.STRING,
     email: DataTypes.STRING,
-    secret: DataTypes.STRING
+    secret: DataTypes.STRING,
+    profilPict: DataTypes.STRING
   }, {
     hooks: {
-    beforeCreate: (user, options) => {
-      user.secret = String(Math.random() * 10000)
-      user.password  = hashingPassword(user.secret, user.password)
-    }
-  },
+        beforeCreate: (user, options) => {
+            user.secret = String(Math.random() * 10000)
+            user.password  = hashingPassword(user.secret, user.password)
+        }
+    }, 
     sequelize,
     tableName: 'users'
   });

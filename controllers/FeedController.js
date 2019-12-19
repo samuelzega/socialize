@@ -7,7 +7,7 @@ class FeedController {
     static showFeed(req, res) {
         const options = {
             include: [Tag, User],
-            order: [['createdAt','ASC']]
+            order: [['createdAt','DESC']]
         };
         let promiseOptions;
         let feedsWithTags;
@@ -23,17 +23,15 @@ class FeedController {
                 countLikeDislike = countRes;
                 promiseOptions = {
                     where: {
-                        // nanti diubah dari session
-                        UserId: 1
+                        UserId: req.session.userId
                     }
                 };
                 return LikeDislike.findAll(promiseOptions);
             }).then((userResponses) => {
                 feedsWithTags.forEach(feed => {
-                    let timeDiff = (new Date() - new Date(feed.createdAt).getTime()) / (1000*60*60*24);
                     let count = 0;
 
-                    feed.setDataValue('timeDiff', timeDiff.toFixed(1));
+                    feed.setTimeDiff((new Date() - new Date(feed.createdAt).getTime()) / (1000*60*60*24));
                     feed.setDataValue('like', '0 like');
                     feed.setDataValue('dislike', '0 dislike');
                     for (let i = 0; i < countLikeDislike.length; i++) {
@@ -69,15 +67,9 @@ class FeedController {
     }
 
     static addFeed(req, res) {
-        // const data = {
-        //     file: req.file.filename,
-        //     body: req.body
-        // };
-        // res.send(data);
         const tagsAdd = req.body.tagsName.split(',');
         const tagsIdFound = [];
         const arrFeedTags = [];
-        console.log(req.params.id);
         const options = {
             where: {
                 name: tagsAdd
@@ -117,11 +109,9 @@ class FeedController {
 
                 return FeedTags.bulkCreate(arrFeedTags);
             }).then((addedFeedTags) => {
-                // res.send(addedFeedTags);
                 res.redirect(`/user/page`);
             }).catch((err) => {
                 res.send(err);
-                // res.redirect('/feed?err='+err);
             });
     }
 
@@ -143,7 +133,10 @@ class FeedController {
         const tagOnFeeds = [];
         const tagName = req.params.tagName;
         let options = {
-            include: Feed,
+            include: {
+                model: Feed,
+                order: [['createdAt','DESC']]
+            },
             where: {
                 name: tagName
             }
@@ -177,17 +170,15 @@ class FeedController {
                 countLikeDislike = countRes;
                 promiseOptions = {
                     where: {
-                        // nanti diubah dari session
-                        UserId: 1
+                        UserId: req.session.userId
                     }
                 };
                 return LikeDislike.findAll(promiseOptions);
             }).then((userResponses) => {
                 feedsWithTags.forEach(feed => {
-                    let timeDiff = (new Date() - new Date(feed.createdAt).getTime()) / (1000*60*60*24);
                     let count = 0;
 
-                    feed.setDataValue('timeDiff', timeDiff.toFixed(1));
+                    feed.setTimeDiff((new Date() - new Date(feed.createdAt).getTime()) / (1000*60*60*24));
                     feed.setDataValue('like', '0 like');
                     feed.setDataValue('dislike', '0 dislike');
                     for (let i = 0; i < countLikeDislike.length; i++) {
@@ -255,7 +246,7 @@ class FeedController {
                 }
             })
             .then(data => {
-                res.redirect('/feeds')
+                res.redirect('back')
             })
             .catch(err => {
                 res.send(err)
@@ -263,7 +254,6 @@ class FeedController {
     }
 
     static dislike(req, res){
-        // res.send(req.params)
         const userId = req.session.userId
         const options = {
             where: {
@@ -300,7 +290,7 @@ class FeedController {
                 }
             })
             .then(data => {
-                res.redirect('/feeds')
+                res.redirect('back')
             })
             .catch(err => {
                 res.send(err)

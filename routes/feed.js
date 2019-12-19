@@ -9,7 +9,7 @@ const checkLogin = require('../middlewares/checkLogin')
 // define the home page route
 router.get('/', checkLogin, FeedController.showFeed);
 router.get('/add', FeedController.showAddFeedForm);
-router.post('/add', upload.single('avatar'), FeedController.addFeed);
+router.post('/add', FeedController.addFeed);
 router.get('/edit/:id', FeedController.showEditFeedForm);
 router.get('/tagged/:tagName', FeedController.showFeedTagged);
 router.get('/like/:feedId', FeedController.like)

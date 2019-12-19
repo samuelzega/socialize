@@ -12,11 +12,11 @@
                 <!-- left column -->
                 <div class="col-md-3">
                     <div class="text-center mb-3">
-                        <img src="../images/161bbd1abc24d29e1abefd0f21ff90f8.png" alt="avatar" class="img-thumbnail" style="width: 200px;height: 200px;max-width: 200px;max-height: 200px;">
+                        <img src="../images/<%=user.profilPict%>" alt="avatar" class="img-thumbnail" style="width: 200px;height: 200px;max-width: 200px;max-height: 200px;">
                     </div>
                     <div class="text-center">
                         <h5><%= user['first_name']%> <%= user['last_name']%></h5>
-                        <a href="/feeds/add">Edit Profile</a>
+                        <a href="/user/edit">Edit Profile</a>
                     </div>
                 </div>
 

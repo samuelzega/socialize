@@ -11,7 +11,10 @@ class FeedController {
         };
         Feed.findAll(options)
             .then((feeds) => {
-                // res.send(feeds);
+                feeds.forEach(feed => {
+                    let timeDiff = (new Date() - new Date(feed.createdAt).getTime()) / (1000*60*60*24);
+                    feed.setDataValue('timeDiff', timeDiff.toFixed(1));
+                });
                 res.render('feeds/list', {feeds});
             }).catch((err) => {
                 res.send(err);
@@ -116,6 +119,42 @@ class FeedController {
                     .end("Only .png files are allowed!");
             });
         }
+    }
+
+    static showFeedTagged(req, res) {
+        const tagOnFeeds = [];
+        const tagName = req.params.tagName;
+        let options = {
+            include: Feed,
+            where: {
+                name: tagName
+            }
+        };
+
+        Tag.findOne(options)
+            .then((feedsTagged) => {
+                if (!feedsTagged.id) {
+                    throw 'Tag Not Found';
+                }
+                feedsTagged.Feeds.forEach(feed => {
+                    options = {
+                        include: [Tag, User],
+                        where: {
+                            id: feed.id
+                        }
+                    };
+                    tagOnFeeds.push(Feed.findOne(options));
+                });
+                return Promise.all(tagOnFeeds);
+            }).then((feeds) => {
+                feeds.forEach(feed => {
+                    let timeDiff = (new Date() - new Date(feed.createdAt).getTime()) / (1000*60*60*24);
+                    feed.setDataValue('timeDiff', timeDiff.toFixed(1));
+                });
+                res.render('feeds/tagged', {tagName, feeds});
+            }).catch((err) => {
+                res.send(err);
+            });
     }
 }
 

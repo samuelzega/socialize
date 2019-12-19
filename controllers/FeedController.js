@@ -1,7 +1,7 @@
 'use strict'
 
 const fs = require('fs');
-const {Feed, Tag, FeedTags, User} = require('../models');
+const {Feed, Tag, FeedTags, User, LikeDislike} = require('../models');
 
 class FeedController {
     static showFeed(req, res) {
@@ -157,18 +157,84 @@ class FeedController {
             });
     }
 
-    static LikeDislike(req, res){
-        Feed.count()
-        .then(data => {
-            res.send({data})
-            // console.log(data);
-            
-        })
-        .catch(err => {
-            res.send(err)
-            // console.log(err);
-            
-        })
+    static like(req, res){
+        const options = {
+            where: {
+                UserId: 1,
+                FeedId: Number(req.params.feedId)
+            }
+        }
+        LikeDislike.findOne(options)
+            .then(data => {
+                if (!data) {
+                    return LikeDislike.create({
+                        UserId: 1, 
+                        FeedId: Number(req.params.feedId),
+                        status: 'like'
+                    })
+                }else{
+                    if (data['status'] === 'like') {
+                        res.redirect('/feeds')
+                    }
+                    else{
+                        return LikeDislike.update({
+                            status: 'like'
+                        },{
+                            where: {
+                                UserId: 1, 
+                                FeedId: Number(req.params.feedId)
+                            }
+                        })
+                    }
+                }
+            })
+            .then(data => {
+                res.redirect('/feeds')
+            })
+            .catch(err => {
+                res.send(err)
+            })
+    }
+
+    static dislike(req, res){
+        // res.send(req.params)
+        
+        const options = {
+            where: {
+                UserId: 1,
+                FeedId: Number(req.params.feedId)
+            }
+        }
+        LikeDislike.findOne(options)
+            .then(data => {
+                if (!data) {
+                    return LikeDislike.create({
+                        UserId: 1, 
+                        FeedId: Number(req.params.feedId),
+                        status: 'dislike'
+                    })
+                }else{
+                    if (data['status'] === 'dislike') {
+                        res.redirect('/feeds')
+                    }
+                    else{
+                        return LikeDislike.update({
+                            status: 'dislike'
+                        },{
+                            where: {
+                                UserId: 1, 
+                                FeedId: Number(req.params.feedId)
+                            }
+                        })
+                    }
+                }
+            })
+            .then(data => {
+                res.redirect('/feeds')
+            })
+            .catch(err => {
+                res.send(err)
+            })
     }
 }
 

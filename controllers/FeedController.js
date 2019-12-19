@@ -156,6 +156,20 @@ class FeedController {
                 res.send(err);
             });
     }
+
+    static LikeDislike(req, res){
+        Feed.count()
+        .then(data => {
+            res.send({data})
+            // console.log(data);
+            
+        })
+        .catch(err => {
+            res.send(err)
+            // console.log(err);
+            
+        })
+    }
 }
 
 module.exports = FeedController

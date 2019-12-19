@@ -8,29 +8,7 @@
 
         <div class="container">
             <h1 class="mt-4 mb-4">All Feeds</h1>
-            <table class="table">
-                <tbody>
-                    <%feeds.forEach(feed => {%>
-                        <tr>
-                            <td style="max-width: 800px;">
-                                <p><a href="/feeds/<%=(feed.id)%>"><%= feed['title'] %></a></p>
-                                <span class="font-weight-lighter d-inline-block text-truncate" style="max-width: 95%;">
-                                    <%= feed['content'] %>
-                                </span>
-                                <p>
-                                    <%feed.Tags.forEach(tag => {%>
-                                        <a class="btn btn-info btn-xs" href="/feeds/tagged/<%=tag.name%>" role="button"><%=tag.name%></a>
-                                    <%});%>
-                                </p>
-                            </td>
-                            <td style="min-width:100px">
-                                <p class="font-weight-light">Posted By : </p>
-                                <p><%= `${feed['User']['first_name']} ${feed['User']['last_name']}` %></p>
-                            </td>
-                        </tr>
-                    <%});%>
-                </tbody>
-            </table>
+            <%-include('../partials/feedList')%>
         </div>
 
         <%-include('../partials/footer')%>

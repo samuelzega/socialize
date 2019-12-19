@@ -11,6 +11,10 @@ class FeedController {
         };
         Feed.findAll(options)
             .then((feeds) => {
+                feeds.forEach(feed => {
+                    let timeDiff = (new Date() - new Date(feed.createdAt).getTime()) / (1000*60*60*24);
+                    feed.setDataValue('timeDiff', timeDiff.toFixed(1));
+                });
                 res.render('feeds/list', {feeds});
             }).catch((err) => {
                 res.send(err);
@@ -142,11 +146,12 @@ class FeedController {
                     tagOnFeeds.push(Feed.findOne(options));
                 });
                 return Promise.all(tagOnFeeds);
-            }).then((feedsWithTag) => {
-                feedsWithTag.forEach(feed => {
-                    feed.setDataValue('timeDiff', ((new Date() - new Date(feed.createdAt).getTime()) / (1000*60*60*24)).toFixed(1));
+            }).then((feeds) => {
+                feeds.forEach(feed => {
+                    let timeDiff = (new Date() - new Date(feed.createdAt).getTime()) / (1000*60*60*24);
+                    feed.setDataValue('timeDiff', timeDiff.toFixed(1));
                 });
-                res.render('feeds/tagged', {tagName, feedsWithTag});
+                res.render('feeds/tagged', {tagName, feeds});
             }).catch((err) => {
                 res.send(err);
             });

@@ -7,17 +7,59 @@ class FeedController {
     static showFeed(req, res) {
         let feeds = null
         const options = {
-            include: [Tag,User],
+            include: [Tag, User],
             order: [['createdAt','ASC']]
         };
+        let promiseOptions;
+        let feedsWithTags;
+        let countLikeDislike;
         Feed.findAll(options)
-            .then((data) => {
-                feeds = data
-                data.forEach(feed => {
+            .then((feeds) => {
+                feedsWithTags = feeds;
+                promiseOptions = {
+                    group: ['status','FeedId']
+                };
+                return LikeDislike.count(promiseOptions);
+            }).then((countRes) => {
+                countLikeDislike = countRes;
+                promiseOptions = {
+                    where: {
+                        // nanti diubah dari session
+                        UserId: 1
+                    }
+                };
+                return LikeDislike.findAll(promiseOptions);
+            }).then((userResponses) => {
+                feedsWithTags.forEach(feed => {
                     let timeDiff = (new Date() - new Date(feed.createdAt).getTime()) / (1000*60*60*24);
+                    let count = 0;
+
                     feed.setDataValue('timeDiff', timeDiff.toFixed(1));
+                    feed.setDataValue('like', '0 like');
+                    feed.setDataValue('dislike', '0 dislike');
+                    for (let i = 0; i < countLikeDislike.length; i++) {
+                        if (feed.id === countLikeDislike[i].FeedId) {
+                            let msg;
+                            if (countLikeDislike[i].count < 2) {
+                                msg = `${countLikeDislike[i].count} ${countLikeDislike[i].status}`;
+                            } else {
+                                msg = `${countLikeDislike[i].count} ${countLikeDislike[i].status}s`;
+                            }
+                            feed.setDataValue(countLikeDislike[i].status, msg);
+                            count++;
+                        }
+                        if (count === 2) {
+                            break;
+                        }
+                    }
+                    for (let i = 0; i < userResponses.length; i++) {
+                        if (userResponses[i].FeedId === feed.id) {
+                            feed.setDataValue('userResponse', userResponses[i].status);
+                        }
+                    }
                 });
-                res.render('feeds/list', {feeds});
+
+                res.render('feeds/list', {feeds: feedsWithTags});
             }).catch((err) => {
                 res.send(err);
             });
@@ -98,31 +140,6 @@ class FeedController {
             });
     }
 
-    static uploadImage(req, res) {
-        const tempPath = req.file.path;
-        const targetPath = path.join(__dirname, "./uploads/image.png");
-
-        if (path.extname(req.file.originalname).toLowerCase() === ".png") {
-            fs.rename(tempPath, targetPath, err => {
-                if (err) return handleError(err, res);
-
-                res
-                    .status(200)
-                    .contentType("text/plain")
-                    .end("File uploaded!");
-            });
-        } else {
-            fs.unlink(tempPath, err => {
-                if (err) return handleError(err, res);
-
-                res
-                    .status(403)
-                    .contentType("text/plain")
-                    .end("Only .png files are allowed!");
-            });
-        }
-    }
-
     static showFeedTagged(req, res) {
         const tagOnFeeds = [];
         const tagName = req.params.tagName;
@@ -178,9 +195,13 @@ class FeedController {
                     })
                 }else{
                     if (data['status'] === 'like') {
-                        res.redirect('/feeds')
-                    }
-                    else{
+                        return LikeDislike.destroy({
+                            where: {
+                                UserId: userId, 
+                                FeedId: Number(req.params.feedId)
+                            }
+                        })
+                    } else {
                         return LikeDislike.update({
                             status: 'like'
                         },{
@@ -219,9 +240,13 @@ class FeedController {
                     })
                 }else{
                     if (data['status'] === 'dislike') {
-                        res.redirect('/feeds')
-                    }
-                    else{
+                        return LikeDislike.destroy({
+                            where: {
+                                UserId: userId, 
+                                FeedId: Number(req.params.feedId)
+                            }
+                        })
+                    } else{
                         return LikeDislike.update({
                             status: 'dislike'
                         },{

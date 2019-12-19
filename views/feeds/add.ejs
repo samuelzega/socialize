@@ -1,20 +1,66 @@
 <!doctype html>
 <html lang="en">
-    <head>
-        <%-include('../partials/head')%>
-    </head>
-    <body>
-        <%-include('../partials/navbar')%>
 
-        <form method="post" enctype="multipart/form-data">
-            TITLE: <input type="text" name="title" id="title"><br>
-            CONTENT: <input type="textara" name="content" id="content"><br>
-            TAG: <input type="tag" name="tagsName" id="tagsName"><br>
-            <!-- <input type="text" value="Amsterdam,Washington,Sydney,Beijing,Cairo" data-role="tagsinput" /> -->
-            <input type="file" name="avatar" />
-            <button type="submit">Save</button>
-        </form>
+<head>
+    <%-include('../partials/head')%>
+</head>
 
-        <%-include('../partials/footer')%>
-    </body>
+<body>
+    <%-include('../partials/navbar')%>
+
+    <div class="container">
+        <div class="card mt-5 shadow">
+            <div class="card-body">
+                <!-- <form method="post" enctype="multipart/form-data">
+                    <div class="form-row">
+                        <div class="input-group">
+                            <input type="text" class="form-control" aria-label="Sizing example input"
+                                aria-describedby="inputGroup-sizing-sm" placeholder="title">
+                        </div>
+                        <div class="input-group">
+                            <textarea class="form-control" aria-label="With textarea"
+                                placeholder="Post your thought"></textarea>
+                        </div>
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon1">#</span>
+                            </div>
+                            <input type="text" class="form-control" placeholder="tagsName" aria-label="tagsName"
+                                aria-describedby="basic-addon1">
+                        </div>
+                    </div>
+                    <div class="col-md-2 mt-3">
+                        <button type="submit" class="btn btn-success btn-lg btn-block">Add Feed</button>
+                    </div>
+                    <input type="file" name="avatar" />
+                    <button type="submit">Save</button>
+                </form> -->
+
+                <form method="post">
+                    <div class="form-group">
+                        <label for="title">Title</label>
+                        <input type="email" class="form-control" name="title" id="title" placeholder="Summary your thought">
+                    </div>
+                    <div class="form-group">
+                        <label for="content">Feed</label>
+                        <textarea class="form-control" id="content" name="content" rows="5" placeholder="Post your story as long as a book of Harry Potter"></textarea>
+                    </div>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon1">#</span>
+                        </div>
+                        <input type="text" class="form-control" placeholder="tags separated by comma with no space" aria-label="tagsName" aria-describedby="basic-addon1">
+                    </div>
+                    <div class="text-right mt-3">
+                        <a class="btn btn-outline-primary" href="/feeds" role="button">Back to Feeds</a>
+                        <button type="submit" class="btn btn-success">Post</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <%-include('../partials/footer')%>
+</body>
+
 </html>

@@ -19,7 +19,7 @@
                     <%tagsData.forEach(tag => {%>
                         <tr>
                             <th scope="row">
-                                <a class="btn btn-outline-info btn-sm" href="#"><%=tag.name%></a>
+                                <a class="btn btn-outline-info btn-sm" href="/feeds/tagged/<%=tag.name%>"><%=tag.name%></a>
                             </th>
                             <td>x<%=tag.count%></td>
                         </tr>

@@ -11,5 +11,6 @@ router.get('/', FeedController.showFeed);
 router.get('/add', FeedController.showAddFeedForm);
 router.post('/add', upload.single('avatar'), FeedController.addFeed);
 router.get('/edit/:id', FeedController.showEditFeedForm);
+router.get('/tagged/:tagName', FeedController.showFeedTagged);
 
 module.exports = router

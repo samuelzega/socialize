@@ -116,6 +116,41 @@ class FeedController {
             });
         }
     }
+
+    static showFeedTagged(req, res) {
+        const tagOnFeeds = [];
+        const tagName = req.params.tagName;
+        let options = {
+            include: Feed,
+            where: {
+                name: tagName
+            }
+        };
+
+        Tag.findOne(options)
+            .then((feedsTagged) => {
+                if (!feedsTagged.id) {
+                    throw 'Tag Not Found';
+                }
+                feedsTagged.Feeds.forEach(feed => {
+                    options = {
+                        include: [Tag, User],
+                        where: {
+                            id: feed.id
+                        }
+                    };
+                    tagOnFeeds.push(Feed.findOne(options));
+                });
+                return Promise.all(tagOnFeeds);
+            }).then((feedsWithTag) => {
+                feedsWithTag.forEach(feed => {
+                    feed.setDataValue('timeDiff', ((new Date() - new Date(feed.createdAt).getTime()) / (1000*60*60*24)).toFixed(1));
+                });
+                res.render('feeds/tagged', {tagName, feedsWithTag});
+            }).catch((err) => {
+                res.send(err);
+            });
+    }
 }
 
 module.exports = FeedController

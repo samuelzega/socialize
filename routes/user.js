@@ -6,9 +6,9 @@ router.get('/', UserController.loginPage)
 router.post('/', UserController.login)
 router.get('/register', UserController.registerPage)
 router.post('/register', UserController.register)
-router.get('/:id', UserController.userPage)
-router.post('/:id', FeedController.addFeed)
-router.get('/edit/:id', UserController.editPage)
-router.post('/edit/:id', UserController.edit)
+router.get('/page', UserController.userPage)
+router.post('/page', FeedController.addFeed)
+router.get('/edit/', UserController.editPage)
+router.post('/edit/', UserController.edit)
 
 module.exports = router

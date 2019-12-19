@@ -32,12 +32,12 @@ class UserController {
 
     static login(req, res){
         let {password, username} = req.body
-        
-        User.findOne({
+        const options ={
             where: {
                 username: username
             }
-        })
+        }
+        User.findOne(options)
         .then(user => {
             if (!user || !user['secret']) {
                 throw 'Wrong Username or Password';
@@ -46,7 +46,8 @@ class UserController {
                 if (user['password'] !== checkPassword) {
                     throw 'Wrong Username or Password';
                 }else{
-                    res.redirect(`/user/${user['id']}`);
+                    req.session.userId = user['id']
+                    res.redirect(`/user/page`);
                 }
             }
         })
@@ -56,9 +57,10 @@ class UserController {
     }
 
     static editPage(req, res){
+        let userId = req.session.userId
         User.findOne({
             where:{
-                id: req.params.id
+                id: userId
             }
         })
         .then(user=> {
@@ -71,7 +73,7 @@ class UserController {
 
     static edit(req,res){
         let {first_name, last_name, old_password, new_password, email, username} = req.body
-        let userId = req.params.id
+        let userId = req.session.userId
         User.findOne({
             where:{
                 id: userId
@@ -105,7 +107,7 @@ class UserController {
     }
 
     static userPage(req, res){
-        let userId = req.params.id
+        let userId = req.session.userId
         let user = null
         User.findOne({
             where:{

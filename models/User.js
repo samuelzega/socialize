@@ -23,7 +23,8 @@ module.exports = (sequelize, DataTypes) => {
     tableName: 'users'
   });
   User.associate = function(models) {
-    User.hasMany(models.Feed)
+    User.hasMany(models.Feed);
+    User.belongsToMany(models.Feed, {through: models.LikeDislike})
   };
   return User;
 };

@@ -26,6 +26,8 @@
                             <%=feed.getDataValue('timeDiff')%> days ago
                         <%}%>
                     </p>
+                    <a class="btn btn-success btn-xs" href="/feeds/like/<%=(feed.id)%>" role="button">Like</a>
+                    <a class="btn btn-danger btn-xs" href="/feeds/dislike/<%=(feed.id)%>" role="button">Dislike</a>
                 </td>
             </tr>
         <%});%>

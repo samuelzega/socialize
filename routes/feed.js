@@ -12,5 +12,8 @@ router.get('/add', FeedController.showAddFeedForm);
 router.post('/add', upload.single('avatar'), FeedController.addFeed);
 router.get('/edit/:id', FeedController.showEditFeedForm);
 router.get('/tagged/:tagName', FeedController.showFeedTagged);
+router.get('/like/:feedId', FeedController.like)
+router.get('/dislike/:feedId', FeedController.dislike)
+
 
 module.exports = router

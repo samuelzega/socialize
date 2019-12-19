@@ -140,31 +140,6 @@ class FeedController {
             });
     }
 
-    static uploadImage(req, res) {
-        const tempPath = req.file.path;
-        const targetPath = path.join(__dirname, "./uploads/image.png");
-
-        if (path.extname(req.file.originalname).toLowerCase() === ".png") {
-            fs.rename(tempPath, targetPath, err => {
-                if (err) return handleError(err, res);
-
-                res
-                    .status(200)
-                    .contentType("text/plain")
-                    .end("File uploaded!");
-            });
-        } else {
-            fs.unlink(tempPath, err => {
-                if (err) return handleError(err, res);
-
-                res
-                    .status(403)
-                    .contentType("text/plain")
-                    .end("Only .png files are allowed!");
-            });
-        }
-    }
-
     static showFeedTagged(req, res) {
         const tagOnFeeds = [];
         const tagName = req.params.tagName;
@@ -220,9 +195,13 @@ class FeedController {
                     })
                 }else{
                     if (data['status'] === 'like') {
-                        res.redirect('/feeds')
-                    }
-                    else{
+                        return LikeDislike.destroy({
+                            where: {
+                                UserId: userId, 
+                                FeedId: Number(req.params.feedId)
+                            }
+                        })
+                    } else {
                         return LikeDislike.update({
                             status: 'like'
                         },{
@@ -261,9 +240,13 @@ class FeedController {
                     })
                 }else{
                     if (data['status'] === 'dislike') {
-                        res.redirect('/feeds')
-                    }
-                    else{
+                        return LikeDislike.destroy({
+                            where: {
+                                UserId: userId, 
+                                FeedId: Number(req.params.feedId)
+                            }
+                        })
+                    } else{
                         return LikeDislike.update({
                             status: 'dislike'
                         },{

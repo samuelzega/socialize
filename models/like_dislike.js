@@ -13,6 +13,8 @@ module.exports = (sequelize, DataTypes) => {
   });
   LikeDislike.associate = function(models) {
     // associations can be defined here
+    LikeDislike.belongsTo(models.Feed);
+    LikeDislike.belongsTo(models.User);
   };
   return LikeDislike;
 };

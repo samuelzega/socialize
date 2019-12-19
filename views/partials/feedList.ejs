@@ -26,8 +26,17 @@
                             <%=feed.getDataValue('timeDiff')%> days ago
                         <%}%>
                     </p>
-                    <a class="btn btn-success btn-xs" href="/feeds/like/<%=(feed.id)%>" role="button">Like</a>
-                    <a class="btn btn-danger btn-xs" href="/feeds/dislike/<%=(feed.id)%>" role="button">Dislike</a>
+                    <%if (feed.getDataValue('like') <= 1) {%>
+                        <a class="btn btn-success btn-xs" href="/feeds/like/<%=(feed.id)%>" role="button" data-toggle="tooltip" data-placement="top" title="<%=feed.getDataValue('like')%> like">Like</a>
+                    <%} else {%>
+                        <a class="btn btn-success btn-xs" href="/feeds/like/<%=(feed.id)%>" role="button" data-toggle="tooltip" data-placement="top" title="<%=feed.getDataValue('like')%> likes">Like</a>
+                    <%}%>
+
+                    <%if (feed.getDataValue('dislike') <= 1) {%>
+                        <a class="btn btn-danger btn-xs" href="/feeds/dislike/<%=(feed.id)%>" role="button" data-toggle="tooltip" data-placement="top" title="<%=feed.getDataValue('dislike')%> dislike">Dislike</a>
+                    <%} else {%>
+                        <a class="btn btn-danger btn-xs" href="/feeds/dislike/<%=(feed.id)%>" role="button" data-toggle="tooltip" data-placement="top" title="<%=feed.getDataValue('dislike')%> likes">Dislike</a>
+                    <%}%>
                 </td>
             </tr>
         <%});%>

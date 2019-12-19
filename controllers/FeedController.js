@@ -5,17 +5,19 @@ const {Feed, Tag, FeedTags, User, LikeDislike} = require('../models');
 
 class FeedController {
     static showFeed(req, res) {
+        let feeds = null
         const options = {
             include: [Tag,User],
             order: [['createdAt','ASC']]
         };
         Feed.findAll(options)
-            .then((feeds) => {
-                feeds.forEach(feed => {
+            .then((data) => {
+                feeds = data
+                data.forEach(feed => {
                     let timeDiff = (new Date() - new Date(feed.createdAt).getTime()) / (1000*60*60*24);
                     feed.setDataValue('timeDiff', timeDiff.toFixed(1));
                 });
-                res.render('feeds/list', {feeds});
+                // res.render('feeds/list', {feeds});
             }).catch((err) => {
                 res.send(err);
             });

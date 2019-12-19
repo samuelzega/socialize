@@ -5,7 +5,6 @@ const {Feed, Tag, FeedTags, User, LikeDislike} = require('../models');
 
 class FeedController {
     static showFeed(req, res) {
-        let feeds = null
         const options = {
             include: [Tag, User],
             order: [['createdAt','ASC']]
@@ -149,6 +148,9 @@ class FeedController {
                 name: tagName
             }
         };
+        let promiseOptions;
+        let feedsWithTags;
+        let countLikeDislike;
 
         Tag.findOne(options)
             .then((feedsTagged) => {
@@ -166,11 +168,50 @@ class FeedController {
                 });
                 return Promise.all(tagOnFeeds);
             }).then((feeds) => {
-                feeds.forEach(feed => {
+                feedsWithTags = feeds;
+                promiseOptions = {
+                    group: ['status','FeedId']
+                };
+                return LikeDislike.count(promiseOptions);
+            }).then((countRes) => {
+                countLikeDislike = countRes;
+                promiseOptions = {
+                    where: {
+                        // nanti diubah dari session
+                        UserId: 1
+                    }
+                };
+                return LikeDislike.findAll(promiseOptions);
+            }).then((userResponses) => {
+                feedsWithTags.forEach(feed => {
                     let timeDiff = (new Date() - new Date(feed.createdAt).getTime()) / (1000*60*60*24);
+                    let count = 0;
+
                     feed.setDataValue('timeDiff', timeDiff.toFixed(1));
+                    feed.setDataValue('like', '0 like');
+                    feed.setDataValue('dislike', '0 dislike');
+                    for (let i = 0; i < countLikeDislike.length; i++) {
+                        if (feed.id === countLikeDislike[i].FeedId) {
+                            let msg;
+                            if (countLikeDislike[i].count < 2) {
+                                msg = `${countLikeDislike[i].count} ${countLikeDislike[i].status}`;
+                            } else {
+                                msg = `${countLikeDislike[i].count} ${countLikeDislike[i].status}s`;
+                            }
+                            feed.setDataValue(countLikeDislike[i].status, msg);
+                            count++;
+                        }
+                        if (count === 2) {
+                            break;
+                        }
+                    }
+                    for (let i = 0; i < userResponses.length; i++) {
+                        if (userResponses[i].FeedId === feed.id) {
+                            feed.setDataValue('userResponse', userResponses[i].status);
+                        }
+                    }
                 });
-                res.render('feeds/tagged', {tagName, feeds});
+                res.render('feeds/tagged', {tagName, feeds: feedsWithTags});
             }).catch((err) => {
                 res.send(err);
             });

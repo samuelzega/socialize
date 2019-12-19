@@ -17,7 +17,7 @@ class FeedController {
                     let timeDiff = (new Date() - new Date(feed.createdAt).getTime()) / (1000*60*60*24);
                     feed.setDataValue('timeDiff', timeDiff.toFixed(1));
                 });
-                // res.render('feeds/list', {feeds});
+                res.render('feeds/list', {feeds});
             }).catch((err) => {
                 res.send(err);
             });

@@ -18,8 +18,8 @@ module.exports = (sequelize, DataTypes) => {
 
   FeedTags.associate = function(models) {
     // associations can be defined here
-    // FeedTags.belongsTo(models.Feed);
-    // FeedTags.belongsTo(models.Tag);
+    FeedTags.belongsTo(models.Feed);
+    FeedTags.belongsTo(models.Tag);
   };
   return FeedTags;
 };

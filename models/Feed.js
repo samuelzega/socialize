@@ -2,7 +2,12 @@
 module.exports = (sequelize, DataTypes) => {
   const Model = sequelize.Sequelize.Model
   
-  class Feed extends Model{}
+  class Feed extends Model{
+        setTimeDiff(value) {
+            const timeDiff = parseFloat(value.toFixed(1));
+            this.setDataValue('timeDiff', timeDiff);
+        }
+  }
   Feed.init({
     UserId: DataTypes.INTEGER,
     title: DataTypes.STRING,

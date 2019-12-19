@@ -6,11 +6,12 @@ const {home, feed, tag, user} = require('./routes');
 
 app.use(session({
     secret: 'sequelize samuel harfi'
-  }))
+}))
 
 app.set('view engine', 'ejs');
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
+
 app.use('/', home);
 app.use('/feeds', feed);
 app.use('/tags', tag);

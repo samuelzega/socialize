@@ -57,14 +57,18 @@ class UserController {
     }
 
     static editPage(req, res){
-        let userId = req.session.userId
+        const userId = req.session.userId;
+        const data = req.query || null;
         User.findOne({
             where:{
                 id: userId
             }
         })
         .then(user=> {
-            res.render('users/edit', {user})
+            if (!user.profilPict) {
+                user.setDataValue('profilPict','161bbd1abc24d29e1abefd0f21ff90f8');
+            }
+            res.render('users/edit', {user, data})
         })
         .catch(err => {
             res.send(err)
@@ -82,27 +86,34 @@ class UserController {
         .then(user => {
             let checkPassword = hashingPassword(user['secret'], old_password)
             if(user['password'] !== checkPassword) {
-                console.log('pasword wrong');
-            }else if(user['password'] === checkPassword){
-                let newPassword = hashingPassword(user['secret'], new_password)
-                return User.update({
+                res.redirect('/user/edit?failed=Wrong Password');
+            } else {
+                let values = {
                     first_name: first_name,
                     last_name:last_name,
-                    password: newPassword,
+                    password: null,
                     email: email,
                     username: username
-                }, {
+                };
+                let options = {
                     where: {
                         id: userId
                     }
-                })
+                };
+                
+                if (!new_password) {
+                    values.password = hashingPassword(user['secret'], old_password)
+                } else {
+                    values.password = hashingPassword(user['secret'], new_password)
+                }
+                return User.update(values, options)
             }
         })
         .then((data) => {
-            console.log(data);
+            res.redirect('/user/edit?success=Data successfully changed');
         })
         .catch(err => {
-            console.log(err);
+            res.send(err);
         })
     }
 
@@ -115,12 +126,17 @@ class UserController {
             }
         })
         .then(userLogin => {
-            // res.render('users/user', {user})
+            if (!userLogin.profilPict) {
+                userLogin.setDataValue('profilPict','161bbd1abc24d29e1abefd0f21ff90f8');
+            }
             user = userLogin
-            return user.getFeeds({include : Tag})
+            let options = {
+                include: Tag,
+                order: [['createdAt','DESC']]
+            }
+            return user.getFeeds(options)
         })
         .then(feed => {
-            // res.send(feed[1]['Tags'][0]['name'])
             res.render('users/user', {feed, user})
         })
         .catch(err => {
@@ -128,6 +144,27 @@ class UserController {
         })
     }
     
+    static uploadImage(req, res) {
+        if (!req.file) {
+            res.redirect('/user/edit?failed=Invalid image file');
+        }
+
+        const values = {
+            profilPict: req.file.filename
+        };
+        const options = {
+            where: {
+                id: req.session.userId
+            }
+        };
+
+        User.update(values, options)
+            .then((result) => {
+                res.redirect('/user/edit?success=Profile picture successfully changed');
+            }).catch((err) => {
+                res.send(err);
+            });
+    }
 }
 
 module.exports = UserController

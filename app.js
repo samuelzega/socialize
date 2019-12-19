@@ -16,4 +16,17 @@ app.use('/feeds', feed);
 app.use('/tags', tag);
 app.use('/user', user);
 
+app.get('/logout', function(req, res, next) {
+  if (req.session) {
+    // delete session object
+    req.session.destroy(function(err) {
+      if(err) {
+        return next(err);
+      } else {
+        return res.redirect('/user');
+      }
+    });
+  }
+});
+
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));

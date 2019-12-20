@@ -15,8 +15,8 @@
                         <%});%>
                     </p>
                 </td>
-                <td style="min-width:100px;" class="text-right">                    
-                    <a class="btn btn-outline-info btn-md" href="/otherpage/<%=(feed['User']['id'])%>"><%= `${feed['User']['first_name']} ${feed['User']['last_name']}` %></a>
+                <td style="min-width:100px;" class="text-right">        
+                    <a href="/otherpage/<%=(feed['User']['id'])%>"><img src="../images/<%=feed.User.profilPict%>" alt="profile picture" style="width: 60px; max-width: 60px;"></a>
                     <p class="font-weight-light text-muted">
                         <%if (feed.getDataValue('timeDiff') == 0) {%>
                             just now

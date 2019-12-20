@@ -16,7 +16,7 @@
                     </p>
                 </td>
                 <td style="min-width:100px;" class="text-right">                    
-                    <p><%= `${feed['User']['first_name']} ${feed['User']['last_name']}` %></p>
+                    <a class="btn btn-outline-success btn-md" href="/otherpage/<%=(feed['User']['id'])%>"><%= `${feed['User']['first_name']} ${feed['User']['last_name']}` %></a>
                     <p class="font-weight-light text-muted">
                         <%if (feed.getDataValue('timeDiff') == 0) {%>
                             just now

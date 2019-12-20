@@ -6,14 +6,13 @@ const upload = multer({ dest: 'public/images' })
 const checkLogin = require('../middlewares/checkLogin')
 const redirectIfLogin = require('../middlewares/redirectIfLogin')
 
-
-
 router.get('/', redirectIfLogin, UserController.loginPage)
 router.post('/', UserController.login)
 router.get('/register', UserController.registerPage)
 router.post('/register', UserController.register)
 router.use('/',checkLogin)
 router.get('/page', UserController.userPage)
+router.get('/otherpage/:id', UserController.otherPage)
 router.post('/page', FeedController.addFeed)
 router.get('/edit', UserController.editPage)
 router.post('/edit', UserController.edit)

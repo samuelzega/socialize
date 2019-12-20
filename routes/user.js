@@ -4,8 +4,11 @@ const FeedController = require('../controllers/FeedController')
 const multer  = require('multer')
 const upload = multer({ dest: 'public/images' })
 const checkLogin = require('../middlewares/checkLogin')
+const redirectIfLogin = require('../middlewares/redirectIfLogin')
 
-router.get('/', UserController.loginPage)
+
+
+router.get('/', redirectIfLogin, UserController.loginPage)
 router.post('/', UserController.login)
 router.get('/register', UserController.registerPage)
 router.post('/register', UserController.register)

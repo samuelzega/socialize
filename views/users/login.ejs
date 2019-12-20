@@ -1,30 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<%-include('../partials/head')%>
+    <%-include('../partials/head')%>
+    <title>Socialize: Login</title>
 </head>
 <body>
-	<%-include('../partials/navbar')%>
-	<div class="container">
+	<div class="container mt-5">
 		<%-include('../partials/alert')%>
 
-		<div class="signup-form">
-			<form method="post">
-				<h2>Login</h2>
-				<p class="hint-text">Fill it right</p>
-				
-				<div class="form-group">
-					<input type="text" class="form-control" name="username" placeholder="Username" required>
-				</div>
-				<div class="form-group">
-					<input type="password" class="form-control" name="password" placeholder="Password" required>
-				</div>
-				<div class="form-group">
-					<button type="submit" class="btn btn-success btn-lg btn-block">Login Now</button>
-				</div>
-			</form>
-			<div class="text-center">Dont have any account? <a href="/user/register">Register</a></div>
-		</div>
+        <div class="row d-flex justify-content-center">
+            <div class="col-md-8">
+                <img src="/images/fingersmile.jpg" alt="finger smile">
+            </div>
+            <div class="col-md-4 shadow bg-light p-3">
+                <div class="signup-form mt-5">
+                    <h1 class="text-center mb-5">Socialize</h1>
+                    <form method="post">
+                        <div class="form-group">
+                            <input type="text" class="form-control" name="username" placeholder="Username" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="password" class="form-control" name="password" placeholder="Password" required>
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-success btn-lg btn-block">Login</button>
+                        </div>
+                    </form>
+                    <div class="text-center">Dont have any account? <a href="/user/register">Register</a></div>
+                </div>                
+            </div>
+        </div>
+        <div class="row d-flex justify-content-center bg-light mt-3 shadow">
+            <div class="col-md-12 text-center text-muted mt-2">
+                <p>Copyright &copy; 2019 by <a href="https://github.com/samuelzega">Samuel</a> and <a href="https://github.com/harfialpharaby">Harfi</a></p>
+            </div>
+        </div>
 	</div>
 	<%-include('../partials/footer')%>
 </body>

@@ -4,6 +4,7 @@ const {Tag, Feed} = require('../models/index')
 
 class TagController {
     static showAllTags(req, res) {
+        const fullName = req.session.fullName;
         const options = {
             include: Feed
         };
@@ -17,7 +18,7 @@ class TagController {
                     });
                 });
                 // res.send(tagsData);
-                res.render('tags/list', {tagsData});
+                res.render('tags/list', {tagsData, fullName});
             }).catch((err) => {
                 res.send(err);
             });

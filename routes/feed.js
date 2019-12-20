@@ -7,7 +7,8 @@ const multer  = require('multer')
 const upload = multer({ dest: 'public/images/' })
 const checkLogin = require('../middlewares/checkLogin')
 // define the home page route
-router.get('/', checkLogin, FeedController.showFeed);
+router.use('/', checkLogin);
+router.get('/', FeedController.showFeed);
 router.get('/add', FeedController.showAddFeedForm);
 router.post('/add', FeedController.addFeed);
 router.get('/edit/:id', FeedController.showEditFeedForm);

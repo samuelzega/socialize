@@ -5,6 +5,7 @@ const {Feed, Tag, FeedTags, User, LikeDislike} = require('../models');
 
 class FeedController {
     static showFeed(req, res) {
+        const fullName = req.session.fullName;
         const options = {
             include: [Tag, User],
             order: [['createdAt','DESC']]
@@ -56,14 +57,14 @@ class FeedController {
                     }
                 });
 
-                res.render('feeds/list', {feeds: feedsWithTags});
+                res.render('feeds/list', {feeds: feedsWithTags, fullName});
             }).catch((err) => {
                 res.send(err);
             });
     }
 
     static showAddFeedForm(req, res) {
-        res.render('feeds/add');
+        res.render('feeds/add', req.session);
     }
 
     static addFeed(req, res) {
@@ -116,6 +117,7 @@ class FeedController {
     }
 
     static showEditFeedForm(req, res) {
+        const fullName = req.session.fullName;
         const options = {
             include: Tag,
             where: req.params
@@ -123,13 +125,14 @@ class FeedController {
         Feed.findOne(options)
             .then((feed) => {
                 // res.send(feed);
-                res.render('feeds/edit', {feed});
+                res.render('feeds/edit', {feed, fullName});
             }).catch((err) => {
                 res.send(err);
             });
     }
 
     static showFeedTagged(req, res) {
+        const fullName = req.session.fullName;
         const tagOnFeeds = [];
         const tagName = req.params.tagName;
         let options = {
@@ -202,7 +205,7 @@ class FeedController {
                         }
                     }
                 });
-                res.render('feeds/tagged', {tagName, feeds: feedsWithTags});
+                res.render('feeds/tagged', {tagName, feeds: feedsWithTags, fullName});
             }).catch((err) => {
                 res.send(err);
             });

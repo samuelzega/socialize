@@ -12,10 +12,10 @@ app.set('view engine', 'ejs');
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 
-app.use('/', home);
+app.use('/user', user);
 app.use('/feeds', feed);
 app.use('/tags', tag);
-app.use('/user', user);
+app.use('/', user);
 
 app.get('/logout', function(req, res, next) {
   if (req.session) {

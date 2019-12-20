@@ -47,6 +47,7 @@ class UserController {
                     throw 'Wrong Username or Password';
                 }else{
                     req.session.userId = user['id']
+                    req.session.fullName = `${user['first_name']} ${user['last_name']}`;
                     res.redirect(`/user/page`);
                 }
             }
@@ -58,6 +59,7 @@ class UserController {
 
     static editPage(req, res){
         const userId = req.session.userId;
+        const fullName = req.session.fullName
         const data = req.query || null;
         User.findOne({
             where:{
@@ -68,7 +70,7 @@ class UserController {
             if (!user.profilPict) {
                 user.setDataValue('profilPict','161bbd1abc24d29e1abefd0f21ff90f8');
             }
-            res.render('users/edit', {user, data})
+            res.render('users/edit', {user, data, fullName})
         })
         .catch(err => {
             res.send(err)
@@ -119,6 +121,7 @@ class UserController {
 
     static userPage(req, res){
         let userId = req.session.userId
+        let fullName = req.session.fullName
         let user = null
         User.findOne({
             where:{
@@ -137,7 +140,7 @@ class UserController {
             return user.getFeeds(options)
         })
         .then(feed => {
-            res.render('users/user', {feed, user})
+            res.render('users/user', {feed, user, fullName})
         })
         .catch(err => {
             res.send(err)

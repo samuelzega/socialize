@@ -168,6 +168,34 @@ class UserController {
                 res.send(err);
             });
     }
+
+    static otherPage(req, res){
+        let userId = req.params.id
+        let fullName = req.session.fullName
+        let user = null
+        User.findOne({
+            where:{
+                id: userId
+            }
+        })
+        .then(userLogin => {
+            if (!userLogin.profilPict) {
+                userLogin.setDataValue('profilPict','161bbd1abc24d29e1abefd0f21ff90f8');
+            }
+            user = userLogin
+            let options = {
+                include: Tag,
+                order: [['createdAt','DESC']]
+            }
+            return user.getFeeds(options)
+        })
+        .then(feed => {
+            res.render('users/otherPage', {feed, user, fullName})
+        })
+        .catch(err => {
+            res.send(err)
+        })
+    }
 }
 
 module.exports = UserController

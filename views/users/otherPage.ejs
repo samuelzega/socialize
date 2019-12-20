@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <%-include('../partials/head')%>
+        <title>Socialize: Dashboard</title>
+    </head>
+
+    <body>
+        <%-include('../partials/navbar')%>
+        <div class="container mt-5">
+            <div class="row mt-3">
+                <!-- left column -->
+                <div class="col-md-3">
+                    <div class="text-center mb-3">
+                        <img src="../images/<%=user.profilPict%>" alt="avatar" class="img-thumbnail" style="width: 200px;height: 200px;max-width: 200px;max-height: 200px;">
+                    </div>
+                    
+                </div>
+
+                <!-- edit form column -->
+                <div class="col-md-9 personal-info">
+                    
+                    <div class="jumbotron jumbotron-fluid bg-success text-white">
+                        <div class="container">
+                            <h1 class="display-4">Yours</h1>
+                        </div>
+                    </div>
+                    <table class="table bg-light">
+                        <thead>
+                            <tr>
+                                <th scope="col">Title</th>
+                                <th scope="col">Content</th>
+                                <th scope="col">Tags</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <%for (let index = 0; index < feed.length; index++) {%>
+                                <tr>
+                                    <td><%= feed[index]['title'] %></td>
+                                    <td><%= feed[index]['content'] %></td>
+                                    <td>
+                                        <%feed[index]['Tags'].forEach(tag => {%>
+                                            <a class="btn btn-info btn-xs" href="/feeds/tagged/<%=tag.name%>" role="button"><%=tag.name%></a>
+                                        <%});%>
+                                    </td>
+                                </tr>
+                            <%}%>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
